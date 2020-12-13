@@ -4,6 +4,9 @@ from utils import *
 from abc import ABC, abstractmethod 
 import random
 
+from tensorflow.keras import models
+from sklearn.preprocessing import LabelBinarizer
+
 RECTANGLE_MARGIN_PX = 2
 RECTANGLE_THICKNESS_PX = 1
 
@@ -72,18 +75,61 @@ class FaceRecognizer(ABC) :
 
 class ClassifiedFaceRecognizer(FaceRecognizer):
     """Neural network face classifier with TensorFlow"""
+    path='model/'
+    model=None
+    encoder=None
+    persons=['Dataset_Cite/Dominique_resized', 
+             'Dataset_Cite/Chantal_resized', 
+             'Dataset_Cite/Obama_resized', 
+             'Dataset_Cite/Alain_resized', 
+             'Dataset_Cite/Miley_resized', 
+             'Dataset_Cite/Gerard_resized', 
+             'Dataset_Cite/Jean_resized', 
+             'Dataset_Cite/Sam_resized']
+
     def __init__(self, name, faceDetector, color=(0, 255, 0)):
         FaceRecognizer.__init__(self, name=name, color=color, faceDetector=faceDetector)
         # Model initialisation
+        self.loadModel(self.path)
+        self.encode()
 
-        # self.model =
 
 
-
-    def computeProbabilities(self, img, faces):
+    #def computeProbabilities(self, img, faces):
         # Extracts faces (face in faces = (x, y, w, h)) in img and return array of class with probability 
         # self.model.predict...
 
         # probabilities = [["Unknown", 0.32], ["Alain Chabat", 0.98], ...]
         # return probabilities
-        return list(zip([random.choice(["RandomA", "RandomB", "Unknown"]) for i in faces], [float(random.randint(1,100))/100.0 for i in faces]))
+    #    return list(zip([random.choice(["RandomA", "RandomB", "Unknown"]) for i in faces], [float(random.randint(1,100))/100.0 for i in faces]))
+
+    def computeProbabilities(self, img, faces):
+        probabilities=[]
+        for face in faces:
+            (x, y, w, h) = face
+            cropedImg = img[y:y+h, x:x+w]
+            cropedImg = cv2.cvtColor(cropedImg, cv2.COLOR_BGR2GRAY )
+            cropedImg = cv2.resize(cropedImg, (100, 100), interpolation = cv2.INTER_AREA)
+            cropedImg.resize(100, 100, 1)
+            p = self.model.predict(np.array( [cropedImg,] ) )
+            index=np.argmax(p)
+            #Proba
+            #print(p[0][index])
+            a=np.zeros(8)
+            a[index]=1
+            a=np.asarray([a])
+            #nom
+            #print(self.encoder.inverse_transform(a))
+            probabilities.append([self.encoder.inverse_transform(a), p[0][index]])
+        return probabilities
+
+    def loadModel(self, file):
+        self.model=models.load_model(file)
+
+    def encode(self):
+        self.encoder = LabelBinarizer()
+        self.encoder.fit_transform(self.persons)   
+
+
+
+
