@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from utils import *
 from faceDetectors import *
+from faceRecognizers import *
 import random
 
 PATH_IN = "test.mp4"
@@ -28,30 +29,54 @@ if __name__ == "__main__":
 
     print("Face detection initializing... ", end='')
 
+
+    #--- Single value test ---#
+    #
     # values = [10,15,20]
     # colors = generateDistinguishableColors(len(values))
     # detectors = []
     # for i, value in enumerate(values):
     #     detectors.append(SimpleFaceDetector(color=colors[i],scaleFactor=1.05, minNeighbors=value,name=f"v{value}"))
 
+    #--- Multiple detectors test ---#
+    #
     # detectors = [
-    #     SimpleFaceDetector("s0.8m5", color=(255,255,0),scaleFactor=1.03, minNeighbors=3),
-    #     SimpleFaceDetector("s0.8m5", color=(255,0,255),scaleFactor=1.03, minNeighbors=8),
-    #     SimpleFaceDetector("s0.8m5", color=(255,0,255),scaleFactor=1.03, minNeighbors=11),
+    #     SimpleFaceDetector("coarse", scaleFactor=1.4, minNeighbors=5),
+    #     SimpleFaceDetector("fine", scaleFactor=1.02, minNeighbors=15),
+    #     SimpleFaceDetector("details", scaleFactor=1.08, minNeighbors=8),
+    #     SimpleFaceDetector("mid", scaleFactor=1.2, minNeighbors=7)
+    # ]
+    # colors = generateDistinguishableColors(len(detectors))
+    # for i, detector in enumerate(detectors):
+    #     detector.setColor(colors[i])
+
+    #--- Unified detectors test ---#
+    #
+    # detectors = [
+    #     # AddUnifiedFaceDetector("AddUni", detectors=[
+    #     #     SimpleFaceDetector("", scaleFactor=1.4, minNeighbors=5),
+    #     #     SimpleFaceDetector("", scaleFactor=1.05, minNeighbors=13),
+    #     #     SimpleFaceDetector("", scaleFactor=1.2, minNeighbors=7)
+    #     # ], color=(255,0,0)),
+    #     InterUnifiedFaceDetector("InterUni", detectors=[
+    #         SimpleFaceDetector("coarse", scaleFactor=1.4, minNeighbors=5),
+    #         SimpleFaceDetector("fine", scaleFactor=1.02, minNeighbors=15),
+    #         SimpleFaceDetector("details", scaleFactor=1.08, minNeighbors=10),
+    #         SimpleFaceDetector("mid", scaleFactor=1.2, minNeighbors=7)
+    #     ], color=(0,255,0)),
     # ] 
 
+    #--- Face recognizer test ---#
+    faceDetector = InterUnifiedFaceDetector("InterUni", detectors=[
+            SimpleFaceDetector("coarse", scaleFactor=1.4, minNeighbors=5),
+            SimpleFaceDetector("fine", scaleFactor=1.02, minNeighbors=15),
+            SimpleFaceDetector("details", scaleFactor=1.08, minNeighbors=10),
+            SimpleFaceDetector("mid", scaleFactor=1.2, minNeighbors=7)
+        ], color=(0,255,0))
+
     detectors = [
-        AddUnifiedFaceDetector("AddUni", detectors=[
-            SimpleFaceDetector("", scaleFactor=1.4, minNeighbors=5),
-            SimpleFaceDetector("", scaleFactor=1.05, minNeighbors=13),
-            SimpleFaceDetector("", scaleFactor=1.2, minNeighbors=7)
-        ], color=(255,0,0)),
-        InterUnifiedFaceDetector("InterUni", detectors=[
-            SimpleFaceDetector("", scaleFactor=1.4, minNeighbors=5),
-            SimpleFaceDetector("", scaleFactor=1.05, minNeighbors=13),
-            SimpleFaceDetector("", scaleFactor=1.2, minNeighbors=7)
-        ], color=(0,255,0)),
-    ] 
+        ClassifiedFaceRecognizer(name="MainRecog", faceDetector=faceDetector)
+    ]
 
     print(f"done")
 
@@ -77,6 +102,7 @@ if __name__ == "__main__":
             i+=1
         except KeyboardInterrupt as e:
             print("")
+            print("Work interrupted, breaking..")
             break
 
     for detector in detectors :

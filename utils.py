@@ -18,8 +18,11 @@ class TimingManager:
             self.timings[id].append(int(round(time.time() * 1000)) - self.lastTimestamps[id])
             del self.lastTimestamps[id]
 
-    def report(self, id) :
-        if id not in self.timings:
+    def report(self, id=None) :
+        if id == None :
+            for i in self.timings:
+                self.report(i)
+        elif id not in self.timings:
             print(f"--- /!\\ No timings found for {id} ---")
         else :
             t = self.timings[id]

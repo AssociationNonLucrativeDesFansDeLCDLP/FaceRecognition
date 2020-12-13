@@ -19,17 +19,22 @@ class FaceDetector(ABC) :
         faces = self.getFaces(img)
         self.drawFacesBoundaries(img, faces)
 
-    def drawFacesBoundaries(self, img, faces) :
+    def drawFacesBoundaries(self, img, faces, color=None) :
+        if color == None:
+            color = self.color
         for face in faces:
             (x,y,w,h) = face
-            cv2.rectangle(img, (max([x-RECTANGLE_MARGIN_PX,0]), max([y-RECTANGLE_MARGIN_PX, 0])), (min([x + w+RECTANGLE_MARGIN_PX, len(img[0])-2]), min([y + h+RECTANGLE_MARGIN_PX, len(img)-2])), color=self.color, thickness = RECTANGLE_THICKNESS_PX)
-            drawText(img, f"{self.name}", x, y, self.color)
+            cv2.rectangle(img, (max([x-RECTANGLE_MARGIN_PX,0]), max([y-RECTANGLE_MARGIN_PX, 0])), (min([x + w+RECTANGLE_MARGIN_PX, len(img[0])-2]), min([y + h+RECTANGLE_MARGIN_PX, len(img)-2])), color=color, thickness = RECTANGLE_THICKNESS_PX)
+            drawText(img, f"{self.name}", x, y, color)
 
     def report(self):
         print("")
         print("")
         print(f"######### Stats {self.name}: mean {np.mean(self.stats)}, len {len(self.stats)}")
         self.timings.report(f"{self.name}_dtIm")
+
+    def setColor(self, color):
+        self.color = color
 
     @abstractmethod
     def getFaces(self):
