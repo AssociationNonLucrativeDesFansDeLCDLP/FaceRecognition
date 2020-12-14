@@ -27,7 +27,7 @@ class DataSet(object):
         except:
             print('error when splitting the data')
 
-    def extractImages(self, path):
+    def extractImages(self, path, isTrainSet=False, isTestSet=False):
         persons=listdir(path)
         
         try:
@@ -56,8 +56,15 @@ class DataSet(object):
                 label.append(self.transfomed_label[np.where(self.encoder.classes_==person)].flatten())
         data, label=np.array(data), np.array(label)
         data_reshaped=data.reshape(len(data), len(data[0]), len(data[0][0]), 1)
-        self.X=data_reshaped
-        self.Y=label
+        if (isTrainSet):
+            self.X_train=data_reshaped
+            self.y_train=label
+        elif (isTestSet):
+            self.X_test=data_reshaped
+            self.y_test=label    
+        else:
+            self.X=data_reshaped
+            self.Y=label
 
     def getXTrain(self):
         return self.X_train
@@ -84,7 +91,7 @@ class DataSet(object):
         return self.X_test, self.y_test
 
     def getInputShape(self):
-        return np.array(self.X).shape[1:]
+        return np.array(self.X_train).shape[1:]
 
     def getNClasses(self):
         return len(self.encoder.classes_)

@@ -23,7 +23,7 @@ class Model(object):
 	def __init__(self, name):
 		super(Model, self).__init__()
 		self.name=name
-		print('instantiating model : '+str(name))
+		print(f'instantiating model : {str(name)}')
 		
 	def buildModel(self, input_shape, n_classes, n_dense, depth):
 		self.input_shape=input_shape
