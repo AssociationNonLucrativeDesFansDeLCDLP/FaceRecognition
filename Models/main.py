@@ -9,10 +9,10 @@ from os.path import join
 def hypertrain(dataSet, file):
     print('HyperParameter training')
     #dataSet.split()
-    n_dense=[128, 312, 512]
-    depth=[1, 2]
+    n_dense=[128]
+    depth=[2]
     count=0
-    epochs=2
+    epochs=5
     path_to_models='models'
     print('computing ' + str(len(n_dense)*len(depth))+' models')
     for n in n_dense:
