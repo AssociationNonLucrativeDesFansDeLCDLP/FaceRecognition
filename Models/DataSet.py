@@ -3,6 +3,7 @@ from sklearn.preprocessing import LabelBinarizer
 from os import listdir
 import numpy as np
 import cv2
+from os.path import join
 
 class DataSet(object):
     """docstring for DataSet"""
@@ -43,14 +44,14 @@ class DataSet(object):
         data=[]
         label=[]
         for person in persons:
-            faces=listdir(path+person+'/')
+            faces=listdir(path+person)
             try:
                 faces.remove('.DS_Store')
             except:
                 pass
             print("number of faces for "+person+" : "+str(len(faces)))
             for face in faces:
-                img=cv2.imread(path+person+'/'+face)
+                img=cv2.imread(path+join(person,face))
                 image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                 data.append(image)
                 label.append(self.transfomed_label[np.where(self.encoder.classes_==person)].flatten())

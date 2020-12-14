@@ -4,7 +4,7 @@ from collections import Counter
 import Model, DataSet, util
 import ClassifiedFaceRecognizer
 import cv2
-
+from os.path import join
 
 def hypertrain(dataSet, file):
     print('HyperParameter training')
@@ -13,7 +13,7 @@ def hypertrain(dataSet, file):
     depth=[1, 2]
     count=0
     epochs=2
-    path_to_models='models/'
+    path_to_models='models'
     print('computing ' + str(len(n_dense)*len(depth))+' models')
     for n in n_dense:
         for d in depth:
@@ -24,7 +24,7 @@ def hypertrain(dataSet, file):
             model.train(dataSet, epochs=epochs)
             model.evaluate(dataSet)
             model.saveResult(file, writeHeader=count==0)
-            #model.saveModel(file=path_to_models+name)
+            model.saveModel(file=join(path_to_models, name))
             count+=1
             del model
 
