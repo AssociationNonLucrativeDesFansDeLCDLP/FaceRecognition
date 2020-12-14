@@ -2,18 +2,30 @@ import sys
 import numpy as np
 from collections import Counter
 import Model, DataSet, util
+<<<<<<< HEAD
 # import ClassifiedFaceRecognizer
+=======
+import ClassifiedFaceRecognizer
+>>>>>>> 3ff8b842da892d754356e3b09238de114facdc36
 import cv2
 from os.path import join
 
 def hypertrain(dataSet, file):
     print('HyperParameter training')
     #dataSet.split()
+<<<<<<< HEAD
     n_dense=[128]
     depth=[2]
     count=0
     epochs=5
     path_to_models='models'
+=======
+    n_dense=[128, 312, 512]
+    depth=[1, 2]
+    count=0
+    epochs=20
+    path_to_models='models/'
+>>>>>>> 3ff8b842da892d754356e3b09238de114facdc36
     print('computing ' + str(len(n_dense)*len(depth))+' models')
     for n in n_dense:
         for d in depth:
@@ -24,7 +36,11 @@ def hypertrain(dataSet, file):
             model.train(dataSet, epochs=epochs)
             model.evaluate(dataSet)
             model.saveResult(file, writeHeader=count==0)
+<<<<<<< HEAD
             model.saveModel(file=join(path_to_models, name))
+=======
+            #model.saveModel(file=path_to_models+name)
+>>>>>>> 3ff8b842da892d754356e3b09238de114facdc36
             count+=1
             del model
 
