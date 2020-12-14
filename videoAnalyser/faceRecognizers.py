@@ -78,14 +78,10 @@ class ClassifiedFaceRecognizer(FaceRecognizer):
     path='Models/model/'
     model=None
     encoder=None
-    persons=['Dataset_Cite/Dominique_resized', 
-             'Dataset_Cite/Chantal_resized', 
-             'Dataset_Cite/Obama_resized', 
-             'Dataset_Cite/Alain_resized', 
-             'Dataset_Cite/Miley_resized', 
-             'Dataset_Cite/Gerard_resized', 
-             'Dataset_Cite/Jean_resized', 
-             'Dataset_Cite/Sam_resized']
+    persons=['Dominique', 
+             'Chantal',  
+             'Alain', 
+             'Gerard']
 
     def __init__(self, name, faceDetector, color=(0, 255, 0)):
         FaceRecognizer.__init__(self, name=name, color=color, faceDetector=faceDetector)
@@ -115,7 +111,7 @@ class ClassifiedFaceRecognizer(FaceRecognizer):
             index=np.argmax(p)
             #Proba
             #print(p[0][index])
-            a=np.zeros(8)
+            a=np.zeros(len(persons))
             a[index]=1
             a=np.asarray([a])
             #nom
