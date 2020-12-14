@@ -2,21 +2,20 @@ import cv2
 import numpy as np
 
 PATH_IN='flim.mp4'
-PATH_OUT='faces/'
+PATH_OUT='testFrames2/'
 SKIP_FRAME_STEP=5*25
 
-n = 25*600 # initial frame
+n = 4000*25 # initial frame
 
 
 
 vIn = cv2.VideoCapture(PATH_IN)
-detector = MTCNN()
 
 vIn.set(1,n)#  # Where frame_no is the frame you want
 
 imageCount=0
 maxImages=2000
-essai=2
+essai=1
 
 faceDetector = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 

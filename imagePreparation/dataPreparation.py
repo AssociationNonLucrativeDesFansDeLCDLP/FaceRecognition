@@ -7,6 +7,7 @@ from os import listdir
 from os.path import isfile, join
 
 def writeHashName(dirPath, img) :
+    img = cv2.resize(img, (128,128))
     filename = hashlib.md5(np.ascontiguousarray(img)).hexdigest()
     cv2.imwrite(dirPath+"/"+filename+".jpg", img)
 
@@ -65,6 +66,18 @@ def auto(inputDir, outputDir, faceCascade = cv2.CascadeClassifier(cv2.data.haarc
                         sY = max(0, int(y-h*scale))
                         sW = min(mX-sX, int(w*(1+scale*2)))
                         sH = min(mY-sY, int(h*(1+scale*2)))
+                        # recrop to square for future resizing
+                        if sW > sH :
+                            d = sW - sH
+                            sX -= d/2
+                            sW = sH
+                        elif sH > sW :
+                            d = sH - sW
+                            sY -= d/2
+                            sH = sW
+                            
+                        sW = max(sW, sH)
+
                         imgCropped = imgNew[sY:sY+sH, sX:sX+sW]
                         print(f"Exporting with scale {scale}x and angle {angle}°")
                         writeHashName(output, imgCropped)
