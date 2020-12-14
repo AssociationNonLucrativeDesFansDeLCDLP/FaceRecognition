@@ -81,7 +81,8 @@ class ClassifiedFaceRecognizer(FaceRecognizer):
     persons=['Dominique', 
              'Chantal',  
              'Alain', 
-             'Gerard']
+             'Gerard',
+             'Other']
 
     def __init__(self, name, faceDetector, color=(0, 255, 0)):
         FaceRecognizer.__init__(self, name=name, color=color, faceDetector=faceDetector)
