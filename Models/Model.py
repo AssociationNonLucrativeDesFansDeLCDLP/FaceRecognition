@@ -52,7 +52,7 @@ class Model(object):
 		if (epochs):
 			self.epochs=epochs
 		if (self.model):
-			history=self.model.fit(dataset.getXTrain(), dataset.getYTrain(), epochs=self.epochs, validation_data=(dataset.getXTest(), dataset.getYTest()))
+			history=self.model.fit(dataset.getXTrain(), dataset.getYTrain(), epochs=self.epochs, validation_data=(dataset.getXTest(), dataset.getYTest()), shuffle=True)
 			self.history=history
 		else:
 			print('No model was built')
