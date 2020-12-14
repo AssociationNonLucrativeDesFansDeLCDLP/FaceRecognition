@@ -44,14 +44,14 @@ class DataSet(object):
         data=[]
         label=[]
         for person in persons:
-            faces=listdir(path+person)
+            faces=listdir(join(path, person))
             try:
                 faces.remove('.DS_Store')
             except:
                 pass
             print("number of faces for "+person+" : "+str(len(faces)))
             for face in faces:
-                img=cv2.imread(path+join(person,face))
+                img=cv2.imread(join(path, join(person,face)))
                 image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                 data.append(image)
                 label.append(self.transfomed_label[np.where(self.encoder.classes_==person)].flatten())
