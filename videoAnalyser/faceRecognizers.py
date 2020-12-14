@@ -75,7 +75,7 @@ class FaceRecognizer(ABC) :
 
 class ClassifiedFaceRecognizer(FaceRecognizer):
     """Neural network face classifier with TensorFlow"""
-    path='model/'
+    path='Models/model/'
     model=None
     encoder=None
     persons=['Dataset_Cite/Dominique_resized', 
