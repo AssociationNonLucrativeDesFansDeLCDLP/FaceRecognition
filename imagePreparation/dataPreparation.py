@@ -134,19 +134,31 @@ def bright(bright, inputDir, outputDir) :
 
     files = [join(inputDir, f) for f in listdir(inputDir) if isfile(join(inputDir, f))]
 
+    if not os.path.exists(outputDir):
+        os.makedirs(outputDir)
+
     for i, path in enumerate(files) :
         filename = os.path.basename(path)
+        if filename.startswith("."):
+            print(f"[File {str(i+1)}/{str(len(files))}] {filename} is hidden file, skipping..")
+            continue
         filename = "".join(filename.split(".")[:-1])
         if("bright" in filename) :
             print(f"[File {str(i+1)}/{str(len(files))}] {filename} seems to be brighted image, skipping..")
             continue
-        img = cv2.imread(path)
 
-        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-        hsv[...,2]=np.where(hsv[...,2]*bright>255,255,hsv[...,2]*bright)
-        imgNew = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
+        try:
+            img = cv2.imread(path)
 
-        cv2.imwrite(f"{outputDir}/{filename}-bright{bright}.jpg", imgNew)
+            hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+            hsv[...,2]=np.where(hsv[...,2]*bright>255,255,hsv[...,2]*bright)
+
+            imgNew = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
+            cv2.imwrite(f"{outputDir}/{filename}-bright{bright}.jpg", imgNew)
+        except Exception as e:
+            print(f"Error while processing image {path}; skipping")
+            raise e
+            continue
         print(f"[File {str(i+1)}/{str(len(files))}] Brightness +({bright}) to {filename}-bright{bright}.jpg!")
 
 def rotate(angle, inputDir, outputDir):

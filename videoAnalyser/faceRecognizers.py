@@ -109,8 +109,8 @@ class ClassifiedFaceRecognizer(FaceRecognizer):
             (x, y, w, h) = face
             cropedImg = img[y:y+h, x:x+w]
             cropedImg = cv2.cvtColor(cropedImg, cv2.COLOR_BGR2GRAY )
-            cropedImg = cv2.resize(cropedImg, (100, 100), interpolation = cv2.INTER_AREA)
-            cropedImg.resize(100, 100, 1)
+            cropedImg = cv2.resize(cropedImg, (128, 128), interpolation = cv2.INTER_AREA)
+            cropedImg.resize(128, 128, 1)
             p = self.model.predict(np.array( [cropedImg,] ) )
             index=np.argmax(p)
             #Proba
