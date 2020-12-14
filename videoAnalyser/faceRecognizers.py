@@ -78,14 +78,10 @@ class ClassifiedFaceRecognizer(FaceRecognizer):
     path='Models/model/'
     model=None
     encoder=None
-    persons=['Dataset_Cite/Dominique_resized', 
-             'Dataset_Cite/Chantal_resized', 
-             'Dataset_Cite/Obama_resized', 
-             'Dataset_Cite/Alain_resized', 
-             'Dataset_Cite/Miley_resized', 
-             'Dataset_Cite/Gerard_resized', 
-             'Dataset_Cite/Jean_resized', 
-             'Dataset_Cite/Sam_resized']
+    persons=['Dominique', 
+             'Chantal',  
+             'Alain', 
+             'Gerard']
 
     def __init__(self, name, faceDetector, color=(0, 255, 0)):
         FaceRecognizer.__init__(self, name=name, color=color, faceDetector=faceDetector)
@@ -109,13 +105,13 @@ class ClassifiedFaceRecognizer(FaceRecognizer):
             (x, y, w, h) = face
             cropedImg = img[y:y+h, x:x+w]
             cropedImg = cv2.cvtColor(cropedImg, cv2.COLOR_BGR2GRAY )
-            cropedImg = cv2.resize(cropedImg, (100, 100), interpolation = cv2.INTER_AREA)
-            cropedImg.resize(100, 100, 1)
+            cropedImg = cv2.resize(cropedImg, (128, 128), interpolation = cv2.INTER_AREA)
+            cropedImg.resize(128, 128, 1)
             p = self.model.predict(np.array( [cropedImg,] ) )
             index=np.argmax(p)
             #Proba
             #print(p[0][index])
-            a=np.zeros(8)
+            a=np.zeros(len(persons))
             a[index]=1
             a=np.asarray([a])
             #nom
