@@ -39,6 +39,8 @@ def auto(inputDir, outputDir, faceCascade = cv2.CascadeClassifier(cv2.data.haarc
                     name = "dominique"
                 elif key & 0xFF == ord('r'):
                     name = "gerard"
+                if key & 0xFF == ord('s'):   
+                    name = "trash"
                 else :
                     continue
 

@@ -99,7 +99,6 @@ if __name__ == "__main__":
             drawText(img, "Skynet - COUSIN, LE PLUARD", 0, 0)
 
             print(f"detecting... ", end='')
-
             for detector in detectors :
                 detector.treatImage(img)
 
@@ -112,9 +111,14 @@ if __name__ == "__main__":
             print("")
             print("Work interrupted, breaking..")
             break
+        except Exception as e:
+            print("/!\\")
+            print("Error during processing !")
+            print(e)
+            
+    vOut.release()
+    vIn.release()
 
     for detector in detectors :
         detector.report()
 
-    vOut.release()
-    vIn.release()
