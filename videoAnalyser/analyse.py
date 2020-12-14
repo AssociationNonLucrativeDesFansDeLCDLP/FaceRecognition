@@ -7,6 +7,7 @@ import random
 
 PATH_IN = "test.mp4"
 PATH_OUT = "out.mp4"
+MAX_FRAME = 0
 
 #--------------------- Program main --------------------------
 if __name__ == "__main__":
@@ -36,16 +37,20 @@ if __name__ == "__main__":
     # colors = generateDistinguishableColors(len(values))
     # detectors = []
     # for i, value in enumerate(values):
-    #     detectors.append(SimpleFaceDetector(color=colors[i],scaleFactor=1.05, minNeighbors=value,name=f"v{value}"))
+    #     detectors.append(CVFaceDetector(color=colors[i],scaleFactor=1.05, minNeighbors=value,name=f"v{value}"))
 
     #--- Multiple detectors test ---#
-    #
+    # 
     # detectors = [
-    #     SimpleFaceDetector("coarse", scaleFactor=1.4, minNeighbors=5),
-    #     SimpleFaceDetector("fine", scaleFactor=1.02, minNeighbors=15),
-    #     SimpleFaceDetector("details", scaleFactor=1.08, minNeighbors=8),
-    #     SimpleFaceDetector("mid", scaleFactor=1.2, minNeighbors=7)
+    #     InterUnifiedFaceDetector("InterUni", detectors=[
+    #         MTCNNFaceDetector("MTCNN", color=(255,0,0)),
+    #         CVFaceDetector("coarse", scaleFactor=1.4, minNeighbors=5),
+    #         # CVFaceDetector("fine", scaleFactor=1.02, minNeighbors=15),
+    #         CVFaceDetector("details", scaleFactor=1.08, minNeighbors=13),
+    #         CVFaceDetector("mid", scaleFactor=1.2, minNeighbors=7)
+    #     ], color=(0,0,255))
     # ]
+    # 
     # colors = generateDistinguishableColors(len(detectors))
     # for i, detector in enumerate(detectors):
     #     detector.setColor(colors[i])
@@ -54,38 +59,41 @@ if __name__ == "__main__":
     #
     # detectors = [
     #     # AddUnifiedFaceDetector("AddUni", detectors=[
-    #     #     SimpleFaceDetector("", scaleFactor=1.4, minNeighbors=5),
-    #     #     SimpleFaceDetector("", scaleFactor=1.05, minNeighbors=13),
-    #     #     SimpleFaceDetector("", scaleFactor=1.2, minNeighbors=7)
+    #     #     CVFaceDetector("", scaleFactor=1.4, minNeighbors=5),
+    #     #     CVFaceDetector("", scaleFactor=1.05, minNeighbors=13),
+    #     #     CVFaceDetector("", scaleFactor=1.2, minNeighbors=7)
     #     # ], color=(255,0,0)),
     #     InterUnifiedFaceDetector("InterUni", detectors=[
-    #         SimpleFaceDetector("coarse", scaleFactor=1.4, minNeighbors=5),
-    #         SimpleFaceDetector("fine", scaleFactor=1.02, minNeighbors=15),
-    #         SimpleFaceDetector("details", scaleFactor=1.08, minNeighbors=10),
-    #         SimpleFaceDetector("mid", scaleFactor=1.2, minNeighbors=7)
+    #         CVFaceDetector("coarse", scaleFactor=1.4, minNeighbors=5),
+    #         CVFaceDetector("fine", scaleFactor=1.02, minNeighbors=15),
+    #         CVFaceDetector("details", scaleFactor=1.08, minNeighbors=10),
+    #         CVFaceDetector("mid", scaleFactor=1.2, minNeighbors=7)
     #     ], color=(0,255,0)),
     # ] 
 
     #--- Face recognizer test ---#
     faceDetector = InterUnifiedFaceDetector("InterUni", detectors=[
-            SimpleFaceDetector("coarse", scaleFactor=1.4, minNeighbors=5),
-            SimpleFaceDetector("fine", scaleFactor=1.02, minNeighbors=15),
-            SimpleFaceDetector("details", scaleFactor=1.08, minNeighbors=10),
-            SimpleFaceDetector("mid", scaleFactor=1.2, minNeighbors=7)
-        ], color=(0,255,0))
+            MTCNNFaceDetector("MTCNN", color=(255,0,0)),
+            CVFaceDetector("coarse", scaleFactor=1.4, minNeighbors=5),
+            # CVFaceDetector("fine", scaleFactor=1.02, minNeighbors=15),
+            CVFaceDetector("details", scaleFactor=1.08, minNeighbors=13),
+            CVFaceDetector("mid", scaleFactor=1.2, minNeighbors=7)
+        ], color=(0,0,255))
+
+
 
     detectors = [
         ClassifiedFaceRecognizer(name="MainRecog", faceDetector=faceDetector)
     ]
 
-    print(f"done")
+    print("done")
 
     i=1
     while(vIn.isOpened()):
         try:
             print(f"Work in progress for frame {i}/{frameCount}... ", end='')
             ret, img = vIn.read()
-            if ret == False:
+            if ret == False or (MAX_FRAME > 0 and i >= MAX_FRAME):
                 print("done!")
                 break
             drawText(img, "Skynet - COUSIN, LE PLUARD", 0, 0)

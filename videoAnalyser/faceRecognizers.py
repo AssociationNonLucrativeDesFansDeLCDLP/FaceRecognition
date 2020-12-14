@@ -111,7 +111,7 @@ class ClassifiedFaceRecognizer(FaceRecognizer):
             index=np.argmax(p)
             #Proba
             #print(p[0][index])
-            a=np.zeros(len(persons))
+            a=np.zeros(len(self.persons))
             a[index]=1
             a=np.asarray([a])
             #nom

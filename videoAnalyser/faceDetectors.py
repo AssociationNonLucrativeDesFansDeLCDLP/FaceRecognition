@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from utils import *
 from abc import ABC, abstractmethod 
+from mtcnn import MTCNN
 
 RECTANGLE_MARGIN_PX = 2
 RECTANGLE_THICKNESS_PX = 1
@@ -31,7 +32,7 @@ class FaceDetector(ABC) :
         print("")
         print("")
         print(f"######### Stats {self.name}: mean {np.mean(self.stats)}, len {len(self.stats)}")
-        self.timings.report(f"{self.name}_dtIm")
+        self.timings.report(f"{self.name}_detect")
 
     def setColor(self, color):
         self.color = color
@@ -40,7 +41,7 @@ class FaceDetector(ABC) :
     def getFaces(self):
         pass
 
-class SimpleFaceDetector(FaceDetector):
+class CVFaceDetector(FaceDetector):
     """OpenCV2 CascadeClassifier based face detector"""
     def __init__(self, name, color=(0, 255, 0), path=cv2.data.haarcascades + "haarcascade_frontalface_default.xml", scaleFactor=1.3, minNeighbors=5):
         FaceDetector.__init__(self, name, color)
@@ -49,10 +50,25 @@ class SimpleFaceDetector(FaceDetector):
         self.minNeighbors = minNeighbors
 
     def getFaces(self, img) :
-        self.timings.start(f"{self.name}_dtIm")
+        self.timings.start(f"{self.name}_detect")
         faces = self.faceDetector.detectMultiScale(image=img, scaleFactor=self.scaleFactor, minNeighbors=self.minNeighbors)
         self.stats.append(len(faces))
-        self.timings.stop(f"{self.name}_dtIm")
+        self.timings.stop(f"{self.name}_detect")
+        print(f"{self.name}:{len(faces)}... ", end='')
+        return faces
+
+class MTCNNFaceDetector(FaceDetector):
+    """OpenCV2 CascadeClassifier based face detector"""
+    def __init__(self, name, color=(0, 255, 0)):
+        FaceDetector.__init__(self, name, color)
+        self.faceDetector = MTCNN()
+
+    def getFaces(self, img) :
+        self.timings.start(f"{self.name}_detect")
+        faces=self.faceDetector.detect_faces(img)
+        faces=[x['box'] for x in faces]
+        self.stats.append(len(faces))
+        self.timings.stop(f"{self.name}_detect")
         print(f"{self.name}:{len(faces)}... ", end='')
         return faces
 
@@ -63,12 +79,12 @@ class AddUnifiedFaceDetector(FaceDetector):
         self.detectors = detectors
 
     def getFaces(self, img) :
-        self.timings.start(f"{self.name}_dtIm")
+        self.timings.start(f"{self.name}_detect")
         totalFaces = []
         for detector in self.detectors :
             for face in detector.getFaces(img):
                 totalFaces.append(face)
-        self.timings.stop(f"{self.name}_dtIm")
+        self.timings.stop(f"{self.name}_detect")
 
         print(f"{len(totalFaces)} into ", end='')
 
@@ -124,12 +140,12 @@ class InterUnifiedFaceDetector(FaceDetector):
         self.detectors = detectors
 
     def getFaces(self, img) :
-        self.timings.start(f"{self.name}_dtIm")
+        self.timings.start(f"{self.name}_detect")
         totalFaces = []
         for detector in self.detectors :
             for face in detector.getFaces(img):
                 totalFaces.append(face)
-        self.timings.stop(f"{self.name}_dtIm")
+        self.timings.stop(f"{self.name}_detect")
 
         print(f"{len(totalFaces)} into ", end='')
 
