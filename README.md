@@ -38,6 +38,11 @@ Points à améliorer :
   - La sortie du modèle est souvent trop confiante, peu imoporte l'entrée nous avons une valeur élevée de confiance dans la prédiction. Ceci fait que lorsque l'algorithme de détection des visages se trompe nous avons des situations non voulues (une chaise classifiée comme étant Chantal Lauby par exemple).
 
 
+# Utilisation
+Pré-requis : numpy scikit-build image IPython opencv-python tensorflow
 
+Après création du dataset avec les outils datasetCreation/frameExtractor.py (extraction des frames avec visage d'un film) et datasetCreation/dataPreparation.py (extraction des visages sous plusieurs rotations, scales, luminosités, flip...) ; entrainer un nouveau modèle avec le script videoAnalyser/Models/main.py qui prend en entrée le répertoire de training set & de validation set (les sous-répertoires doivents contenir les différentes classes du modèle)
+
+Analyser ensuite une vidéo avec le script videoAnalyser/analyse.py
 
 Auguste Cousin et Erwan Le Pluard
